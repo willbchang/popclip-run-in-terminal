@@ -38,8 +38,8 @@ tell application "#{ENV['POPCLIP_OPTION_TERMINAL']}"
 	set frontWindow to front window
 	set windowTitle to name of frontWindow
 
-	-- Create a new tab if the window title does not end with shell, which means it has active process.
-	if not (windowTitle ends with "#{ENV['POPCLIP_OPTION_SHELL']}") then
+ 	-- Create a new tab if the window title does not end with shell name or login, which means it has active process.
+	if not (windowTitle ends with "#{ENV['POPCLIP_OPTION_SHELL']}" or windowTitle ends with "login") then
 		tell application "System Events" to keystroke "t" using command down
 	end if
 
