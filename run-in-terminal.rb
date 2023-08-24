@@ -18,7 +18,9 @@ def get_script(query)
   if File.directory?(filepath)
     "cd #{escaped_filepath}"
   else
-    query.gsub(/^\s*\$\s*/, '')
+    # Remove the single dollar sign in the beginning of each line.
+
+    query.gsub(/^\s*\$\s+/, '')
   end
 end
 
