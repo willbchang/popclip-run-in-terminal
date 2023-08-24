@@ -27,7 +27,8 @@ def get_script(query)
   end
 end
 
-query = ARGV[0]
+# ARGV[0] is for testing in the Terminal
+query = ARGV[0] || ENV['POPCLIP_TEXT']
 terminal = 'Terminal'
 
 
