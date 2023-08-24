@@ -1,3 +1,8 @@
+#!/usr/bin/ruby
+# #popclip
+# name: Run in Terminal
+# icon: symbol:terminal
+
 require 'shellwords'
 
 def get_filepath(query)
