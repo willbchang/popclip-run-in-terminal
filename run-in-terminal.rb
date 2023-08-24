@@ -5,18 +5,21 @@
 
 require 'shellwords'
 
+def get_filepath(query)
+  space_tilde_slash = /^\s*~\//
+  if query.start_with?(space_tilde_slash)
+    username = `whoami`.strip
+    subpath = query.sub(space_tilde_slash, '')
+    "/Users/#{username}/#{subpath}"
+  else
+    query.gsub(/^\s*/, '')
+  end
+end
 
 def get_script(query)
-  filepath = query
-  # The \ in filepath has to be escaped third time so that it will actually work.
-  # The first time \\\\\\\\ is in ruby string,
-  # The second time \\\\ is in bash script,
-  # The third time \\ is in apple script,
-  # The fourth time \ is in Terminal app which will escape the special character(s).
-  escaped_filepath = filepath.shellescape.gsub('\\', '\\\\\\\\')
-
+  filepath = get_filepath(query)
   if File.directory?(filepath)
-    "cd #{escaped_filepath}"
+    "cd \\\"#{filepath}\\\""
   else
     # Remove the single dollar sign in the beginning of each line.
     # Escape the " $ \ in the string.
