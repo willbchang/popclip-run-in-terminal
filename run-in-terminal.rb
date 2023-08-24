@@ -10,14 +10,8 @@ def get_filepath(query)
   /^'.*'/.match?(query) ? query[1..-2] : query
 end
 
-def get_filetype(filepath)
-  # Get file extension from file path, without prefix dot, and convert it to a hash key
-  File.extname(filepath)[1..-1].to_sym if File.file?(filepath)
-end
-
-def get_script(query, runtimes)
+def get_script(query)
   filepath = get_filepath(query)
-  filetype = get_filetype(filepath)
   # The \ in filepath has to be escaped third time so that it will actually work.
   # The first time \\\\\\\\ is in ruby string,
   # The second time \\\\ is in bash script,
@@ -27,8 +21,6 @@ def get_script(query, runtimes)
 
   if File.directory?(filepath)
     "cd #{escaped_filepath}"
-  elsif File.file?(filepath)
-    "#{runtimes[filetype]} #{escaped_filepath}"
   else
     query.gsub(/^\s*\$\s*/, '')
   end
@@ -36,16 +28,6 @@ end
 
 query = ARGV[0]
 terminal = 'Terminal'
-runtimes = {
-  rb: 'ruby',
-  sh: 'sh',
-  py: 'python',
-  go: 'go',
-  php: 'php',
-  js: 'node',
-  ts: 'deno',
-  rs: 'rust'
-}
 
 
 `osascript -e 'tell app "#{terminal}" to do script "#{get_script(query, runtimes)}" activate'`
