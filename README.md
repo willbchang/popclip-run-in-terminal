@@ -21,10 +21,15 @@ TODO: Add Video intro.
    ```
 3. Auto detect whether current Terminal tab is running command, it will open a new tab if current tab has active process.
    - **`Terminal → Settings → Profiles → Window → Active process name` should be enabled.**
+   - Tested with `zsh`, `bash` and `fish`.
+
+iTerm.app is not supported, the AppleScript that Terminal.app uses is not compatible with iTerm.app, pull requests are welcome for iTerm.app or other terminal emulators.
+
 ## Installation
 1. Go to [run-in-terminal.rb](./run-in-terminal.rb)
 2. Select all the code.
-3. Click `Install Extension "Run in Terminal"`
+3. Use the PopClip's keyboard shortcut to call it if you selected via <kbd>Command</kbd> + <kbd>A</kbd> 
+4. Click `Install Extension "Run in Terminal"`
 
 ## LICENSE
 AGPL-3.0
