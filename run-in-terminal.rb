@@ -47,8 +47,5 @@ runtimes = {
   rs: 'rust'
 }
 
-if query.empty?
-  `open -a #{terminal}`
-else
-  `osascript -e 'tell app "#{terminal}" to do script "#{get_script(query, runtimes)}" activate'`
-end
+
+`osascript -e 'tell app "#{terminal}" to do script "#{get_script(query, runtimes)}" activate'`
