@@ -5,10 +5,6 @@
 
 require 'shellwords'
 
-def get_filepath(query)
-  # Remove single quote around file path when selecting from Alfred File Browser
-  /^'.*'/.match?(query) ? query[1..-2] : query
-end
 
 def get_script(query)
   filepath = query
