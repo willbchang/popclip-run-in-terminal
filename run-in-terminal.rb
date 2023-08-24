@@ -3,8 +3,6 @@
 # name: Run in Terminal
 # icon: symbol:terminal
 
-require 'shellwords'
-
 def get_filepath(query)
   space_tilde_slash = /^\s*~\//
   if query.start_with?(space_tilde_slash)
