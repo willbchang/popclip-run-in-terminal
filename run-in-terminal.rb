@@ -2,8 +2,6 @@
 # #popclip
 # name: Run in Terminal
 # icon: symbol:terminal
-# options:
-# - { identifier: shell, label: Shell, default value: zsh, type: string, description: "Which shell do you use?" }
 
 def get_filepath(query)
   space_tilde_slash = /^\s*~\//
@@ -27,6 +25,11 @@ def get_script(query)
   end
 end
 
+# https://stackoverflow.com/a/41553295/5520270
+def get_default_shell
+  `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \/.*\///'`
+end
+
 `
 osascript <<EOF
 -- Get the title of the Terminal window
@@ -38,7 +41,7 @@ tell application "Terminal"
 	set windowTitle to name of frontWindow
 
  	-- Create a new tab if the window title does not end with shell name or login, which means it has active process.
-	if not (windowTitle ends with "#{ENV['POPCLIP_OPTION_SHELL']}" or windowTitle ends with "login") then
+	if not (windowTitle ends with "-#{get_default_shell}" or windowTitle ends with "login") then
 		tell application "System Events" to keystroke "t" using command down
 	end if
 
