@@ -11,7 +11,7 @@ def get_filepath(query)
 end
 
 def get_script(query)
-  filepath = get_filepath(query)
+  filepath = query
   # The \ in filepath has to be escaped third time so that it will actually work.
   # The first time \\\\\\\\ is in ruby string,
   # The second time \\\\ is in bash script,
@@ -30,4 +30,4 @@ query = ARGV[0]
 terminal = 'Terminal'
 
 
-`osascript -e 'tell app "#{terminal}" to do script "#{get_script(query, runtimes)}" activate'`
+`osascript -e 'tell app "#{terminal}" to do script "#{get_script(query)}" activate'`
