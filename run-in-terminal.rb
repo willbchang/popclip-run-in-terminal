@@ -2,6 +2,9 @@
 # #popclip
 # name: Run in Terminal
 # icon: symbol:terminal
+# options:
+# - { identifier: terminal, label: Terminal, default value: Terminal, type: string, description: "Which Terminal app do you use?" }
+# - { identifier: shell, label: Shell, default value: zsh, type: string, description: "Which shell do you use?" }
 
 def get_filepath(query)
   space_tilde_slash = /^\s*~\//
@@ -25,30 +28,24 @@ def get_script(query)
   end
 end
 
-# ARGV[0] is for testing in the Terminal
-query = ARGV[0] || ENV['POPCLIP_TEXT']
-terminal = 'Terminal'
-
-
 `
 osascript <<EOF
 -- Get the title of the Terminal window
 -- Please enable the Active process name
 -- Settings → Profiles → Window → Active process name
-tell application "#{terminal}"
+tell application "#{ENV['POPCLIP_OPTION_TERMINAL']}"
 	activate
 	set frontWindow to front window
 	set windowTitle to name of frontWindow
 
-	-- Check if the window title does not end with "-zsh" or "▸ zsh"(figterm)
-	if not (windowTitle ends with "-zsh" or windowTitle ends with "▸ zsh") then
-		-- Create a new tab
+	-- Create a new tab if the window title does not end with shell, which means it has active process.
+	if not (windowTitle ends with "#{ENV['POPCLIP_OPTION_SHELL']}") then
 		tell application "System Events" to keystroke "t" using command down
 	end if
 
 	-- Select current tab and run shell script
 	set theTab to selected tab in first window
-	do script "#{get_script(query)}" in theTab
+	do script "#{get_script(ENV['POPCLIP_TEXT'])}" in theTab
 end tell
 EOF
 `
