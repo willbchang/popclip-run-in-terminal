@@ -27,7 +27,7 @@ end
 
 # https://stackoverflow.com/a/41553295/5520270
 def get_default_shell
-  `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \/.*\///'`
+  `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \\\/.*\\\///'`
 end
 
 `
