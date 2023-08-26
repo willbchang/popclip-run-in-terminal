@@ -58,6 +58,12 @@ EOF`
   end
 end
 
+def is_active_process
+  process = get_current_process
+  shell = get_default_shell
+  !(process.end_with?(shell) || process.end_with?('login'))
+end
+
 `
 osascript <<EOF
 -- Get the title of the Terminal window
@@ -69,7 +75,7 @@ tell application "Terminal"
 	set windowTitle to name of frontWindow
 
  	-- Create a new tab if the window title does not end with shell name or login, which means it has active process.
-	if not (windowTitle ends with "-#{get_default_shell}" or windowTitle ends with "login") then
+	if #{is_active_process} then
 		tell application "System Events" to keystroke "t" using command down
 	end if
 
