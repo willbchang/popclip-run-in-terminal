@@ -30,16 +30,32 @@ def get_default_shell
   `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \\\/.*\\\///'`.chomp
 end
 
+def increase_tyy_number(tty)
+  old_tty_number = tty[/\d+$/]
+  # Convert to an integer, increment, and format as a string with leading zeros
+  incremented_tyy_number = (old_tty_number.to_i + 1).to_s.rjust(old_tty_number.length, '0')
+  tty.sub(old_tty_number, incremented_tyy_number)
+end
+
 def get_current_process
-  `osascript <<EOF
+  applescript_result = `osascript <<EOF
 tell application "Terminal"
 	set terminalWindow to window 1
 	set tabInfo to properties of tab 1 of terminalWindow
 	set processList to processes of tabInfo
 	set lastProcess to (last item of processList)
-  return lastProcess
+	set ttyDevice to tty of tabInfo as string
+  return {lastProcess, ttyDevice}
 end tell
 EOF`
+  process, tty = applescript_result.chomp.split(', ')
+
+  if process.end_with?('(figterm)')
+    tty = increase_tyy_number(tty)
+    `ps -t #{tty} -o command= | tail -n 1 `.chomp
+  else
+    process
+  end
 end
 
 `
