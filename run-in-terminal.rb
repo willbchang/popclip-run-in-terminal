@@ -30,6 +30,18 @@ def get_default_shell
   `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \\\/.*\\\///'`.chomp
 end
 
+def get_current_process
+  `osascript <<EOF
+tell application "Terminal"
+	set terminalWindow to window 1
+	set tabInfo to properties of tab 1 of terminalWindow
+	set processList to processes of tabInfo
+	set lastProcess to (last item of processList)
+  return lastProcess
+end tell
+EOF`
+end
+
 `
 osascript <<EOF
 -- Get the title of the Terminal window
