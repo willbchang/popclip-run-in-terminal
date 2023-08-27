@@ -27,70 +27,25 @@ end
 
 # https://stackoverflow.com/a/41553295/5520270
 def get_default_shell
-  `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \\\/.*\\\///'`.chomp
+  `dscl . -read /Users/$(whoami) UserShell | sed 's/UserShell: \\\/.*\\\//-/'`.chomp
 end
 
-def increase_tyy_number(tty)
-  old_tty_number = tty[/\d+$/]
-  # Convert to an integer, increment, and format as a string with leading zeros
-  incremented_tyy_number = (old_tty_number.to_i + 1).to_s.rjust(old_tty_number.length, '0')
-  tty.sub(old_tty_number, incremented_tyy_number)
-end
 
-def get_current_process
-  applescript_result = `osascript <<EOF
-tell application "Terminal"
-	set terminalWindow to window 1
-	set tabInfo to properties of tab 1 of terminalWindow
-	set processList to processes of tabInfo
-	set lastProcess to (last item of processList)
-	set ttyDevice to tty of tabInfo as string
-  return {lastProcess, ttyDevice}
-end tell
-EOF`
-  process, tty = applescript_result.chomp.split(', ')
-
-  if process.end_with?('(figterm)')
-    tty = increase_tyy_number(tty)
-    `ps -t #{tty} -o command= | tail -n 1 `.chomp
-  else
-    process
-  end
-end
-
-def is_active_process
-  process = get_current_process
-  shell = get_default_shell
-  !(process.end_with?(shell) || process.end_with?('login'))
-end
-
-def active_terminal_window
-` osascript <<EOF
+`osascript <<EOF
 tell application "Terminal"
 	activate
 	-- If there are no open windows, open one.
 	if (count of windows) is less than 1 then
 		do script ""
-	end if
-end tell
-EOF
-`
-end
-
-active_terminal_window
-
-`
-osascript <<EOF
--- Get the title of the Terminal window
--- Please enable the Active process name
--- Settings → Profiles → Window → Active process name
-tell application "Terminal"
-	set frontWindow to front window
-	set windowTitle to name of frontWindow
-
- 	-- Create a new tab if the window title does not end with shell name or login, which means it has active process.
-	if #{is_active_process} then
-		tell application "System Events" to keystroke "t" using command down
+	else
+		-- Create a new tab if it has active process.
+		set terminalWindow to window 1
+		set tabInfo to properties of tab 1 of terminalWindow
+		set processList to processes of tabInfo
+		set lastProcess to (last item of processList)
+		if not (lastProcess ends with "#{get_default_shell}" or lastProcess ends with "login") then
+			tell application "System Events" to keystroke "t" using command down
+		end if
 	end if
 
 	-- Select current tab and run shell script

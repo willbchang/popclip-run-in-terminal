@@ -20,7 +20,6 @@ TODO: Add Video intro.
    $(whoami)
    ```
 3. Auto detect whether current Terminal tab is running command, it will open a new tab if current tab has active process.
-   - **`Terminal → Settings → Profiles → Window → Active process name` should be enabled.**
    - Tested with `zsh`, `bash` and `fish`.
 
 iTerm.app is not supported, the AppleScript that Terminal.app uses is not compatible with iTerm.app, pull requests are welcome for iTerm.app or other terminal emulators.
