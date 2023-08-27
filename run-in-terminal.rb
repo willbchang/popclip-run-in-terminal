@@ -64,13 +64,27 @@ def is_active_process
   !(process.end_with?(shell) || process.end_with?('login'))
 end
 
+def active_terminal_window
+` osascript <<EOF
+tell application "Terminal"
+	activate
+	-- If there are no open windows, open one.
+	if (count of windows) is less than 1 then
+		do script ""
+	end if
+end tell
+EOF
+`
+end
+
+active_terminal_window
+
 `
 osascript <<EOF
 -- Get the title of the Terminal window
 -- Please enable the Active process name
 -- Settings → Profiles → Window → Active process name
 tell application "Terminal"
-	activate
 	set frontWindow to front window
 	set windowTitle to name of frontWindow
 
@@ -81,7 +95,7 @@ tell application "Terminal"
 
 	-- Select current tab and run shell script
 	set theTab to selected tab in first window
-	do script "#{get_script(ENV['POPCLIP_TEXT'])}" in theTab
+	do script "#{get_script(ARGV[0] || ENV['POPCLIP_TEXT'])}" in theTab
 end tell
 EOF
 `
