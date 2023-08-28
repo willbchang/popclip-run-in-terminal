@@ -52,14 +52,11 @@ tell application "Terminal"
             tty = '" & ttyDevice & "'
             old_tty_number = tty[/\\\\\\\\d+$/]
             incremented_tty_number = (old_tty_number.to_i + 1).to_s.rjust(old_tty_number.length, '0')
-            p tty.sub(old_tty_number, incremented_tty_number)
+            printf tty.sub(old_tty_number, incremented_tty_number)
             "
 
 			do shell script "ruby -e " & quoted form of rubyScript
-			set rubyResult to the result
-			-- Remove double quotes from the result.
-			set rubyResult to text 2 thru -2 of rubyResult
-			set ttyDevice to rubyResult
+			set ttyDevice to the result
 			-- Get the real process of current tty.
 			do shell script "ps -t '"& ttyDevice &"' -o command= | tail -n 1"
 			set lastProcess to the result
