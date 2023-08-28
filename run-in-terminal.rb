@@ -43,6 +43,29 @@ tell application "Terminal"
 		set tabInfo to properties of tab 1 of terminalWindow
 		set processList to processes of tabInfo
 		set lastProcess to (last item of processList)
+
+		if (lastProcess ends with "(figterm)") then
+			set ttyDevice to tty of tabInfo
+
+			-- Get the real tty of figterm by increase the tty number
+			set rubyScript to "
+            tty = '" & ttyDevice & "'
+            old_tty_number = tty[/\\\\\\\\d+$/]
+            incremented_tty_number = (old_tty_number.to_i + 1).to_s.rjust(old_tty_number.length, '0')
+            p tty.sub(old_tty_number, incremented_tty_number)
+            "
+
+			do shell script "ruby -e " & quoted form of rubyScript
+			set rubyResult to the result
+			-- Remove double quotes from the result.
+			set rubyResult to text 2 thru -2 of rubyResult
+			set ttyDevice to rubyResult
+			-- Get the real process of current tty.
+			do shell script "ps -t '"& ttyDevice &"' -o command= | tail -n 1"
+			set lastProcess to the result
+		end if
+
+    -- Create a new tab if current tab has active process.
 		if not (lastProcess ends with "#{get_default_shell}" or lastProcess ends with "login") then
 			tell application "System Events" to keystroke "t" using command down
 		end if
