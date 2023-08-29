@@ -1,0 +1,16 @@
+{
+  "popclipVersion": 4151,
+  "identifier": "com.willbc.code.popclip-run-in-terminal",
+  "name": "Run in Terminal",
+  "icon": "symbol:terminal",
+  "title": "Run in Terminal",
+  "actions": [
+    {
+      "requirements": [
+        "text"
+      ],
+      "applescript file": "terminal.applescript"
+    }
+  ],
+  "description": "An improved popclip extension to run selected text in Terminal."
+}
