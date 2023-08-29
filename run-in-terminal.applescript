@@ -29,7 +29,7 @@ tell application "Terminal"
 	end if
 
 
-	-- Create temp file for wrting the text
+	-- Create temp file for writing the text
 	set tempFilePath to POSIX path of (do shell script "mktemp")
 	set tempFile to open for access tempFilePath with write permission
 	write "{popclip text}" to tempFile
@@ -38,11 +38,11 @@ tell application "Terminal"
 	-- Format the command from the file content
 	-- This way can avoid escaping special characters
 	set rubyScriptPath to folderPath & "/format_command.rb"
-	do shell script "ruby " & quoted form of rubyScriptPath & " " & quoted form of tempFile
+	do shell script "ruby " & quoted form of rubyScriptPath & " " & quoted form of tempFilePath
 
 	-- Select current tab and run shell script
 	set theTab to selected tab in first window
-	set fileContents to read POSIX file tempFile
+	set fileContents to read POSIX file tempFilePath
 	do script fileContents in theTab
-	do shell script "rm " & quoted form of tempFile
+	do shell script "rm " & quoted form of tempFilePath
 end tell
