@@ -1,5 +1,5 @@
-set scriptPath to POSIX path of (path to me as text)
-set folderPath to do shell script "dirname " & quoted form of scriptPath
+set home to POSIX path of (path to home folder)
+set folderPath to home & "Library/Application Support/PopClip/Extensions/RunInTerminal.popclipext"
 
 tell application "Terminal"
 	activate
