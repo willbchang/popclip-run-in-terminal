@@ -31,9 +31,9 @@ tell application "Terminal"
 
 	-- Create temp file for writing the text
 	set tempFilePath to POSIX path of (do shell script "mktemp")
-	set tempFile to open for access tempFilePath with write permission
-	write "{popclip text}" to tempFile
-	close access tempFile
+	set fileHandle to open for access tempFilePath with write permission
+	write "{popclip text}" to fileHandle
+	close access fileHandle
 
 	-- Format the command from the file content
 	-- This way can avoid escaping special characters
