@@ -16,7 +16,7 @@ tell application "Terminal"
 		-- Get the last process from the next tty if using figterm
 		if (lastProcess ends with "(figterm)") then
 			set ttyDevice to tty of tabInfo
-			set rubyScriptPath to folderPath & "/bash_process.rb"
+			set rubyScriptPath to folderPath & "/shell_process.rb"
 			do shell script "ruby " & quoted form of rubyScriptPath & " " & quoted form of ttyDevice
 			set lastProcess to the result
 		end if
